@@ -1,0 +1,4 @@
+﻿cron:
+- description: periodic send mail
+  url: /
+  schedule: every 2 minutes

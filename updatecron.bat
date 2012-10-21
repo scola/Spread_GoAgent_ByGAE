@@ -1,0 +1,1 @@
+appcfg.py update_cron ../gae_sendmail
