@@ -1,1 +1,1 @@
-appcfg.py update_cron ../gae_sendmail
+appcfg.py update_cron ../Spread_GoAgent_ByGAE

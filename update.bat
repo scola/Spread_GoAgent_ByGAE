@@ -1,1 +1,1 @@
-appcfg.py update ../gae_sendmail
+appcfg.py update ../Spread_GoAgent_ByGAE
