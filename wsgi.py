@@ -32,7 +32,7 @@ def gae_sendmail(toadress):
     message = mail.EmailMessage(sender='<goagent.helloworld@gmail.com>',
                             subject=unicode('使用GoAgent看YouTube视频,上BBC学英语','utf8'))
 
-    message.to = '<%s@qq.com>' %toadress
+    message.to = toadress
     message.body = ''
     fd = open('goagent.html', 'rb')
     message.html = fd.read()
@@ -51,11 +51,12 @@ def gae_sendmail(toadress):
         logging.info('Congratulations!Mail have been sent successfully by gae.')
         #self.response.out.write('Congratulations!Mail have been sent successfully by gae.')
         return True
+"""
 class Queryed(db.Model):
   previous_response = db.StringProperty()
 
 def NeedToSendMail(response):
-    """ check if we need to sendmail,maybe we have sent to the same addr before"""
+    # check if we need to sendmail,maybe we have sent to the same addr before
     Queryeds = db.Query(Queryed)
     previous_response = Queryeds.get()
     if previous_response == None:
@@ -75,7 +76,7 @@ def NeedToSendMail(response):
             previous_response.put()
             logging.info('You add new query result %s to db',response)
             return True
-
+"""
 class MainPage(webapp2.RequestHandler):
   def get(self):
     self.response.headers['Content-Type'] = 'text/html'
@@ -86,21 +87,30 @@ class MainPage(webapp2.RequestHandler):
     url = "http://scola.hp.af.cm/"
     response = urlfetch_QQ_isExsit(url)
 
-    if  (response[0] == '1' or response[0] == '2') and NeedToSendMail(response):
-        logging.debug('You need to sendmail to %s@qq.com by gae',response[1:])
-        self.response.out.write('You need to sendmail to %s@qq.com by gae.' %response[1:])
+    response = response.split('|')
 
-        retval = gae_sendmail(response[1:])
-        if retval:
-            self.response.out.write('Congratulations!Mail have been sent successfully by gae.')
-        else:
-            self.response.out.write('Sorry!Mail have not sent by gae.')
-    elif response[0] == '0':
-        logging.info('Mailbox %s@qq.com not found',response[1:])
-        self.response.out.write('Mailbox %s@qq.com not found' %response[1:])
+    try:
+        int(response[0])
+    except ValueError:
+        logging.warning('urlfetch result is not QQ num,please check goagent.aws.af.cm server')
     else:
-        logging.error('Server %s occured error,Please check it',url)
-        self.response.out.write('Server %s occured error,Please check it' %url)
+        numtoadr = lambda f: '<%s@qq.com>' %f
+        addr = map(numtoadr, response)
+
+
+    """
+    logging.debug('You need to sendmail to %s@qq.com by gae',response[1:])
+    self.response.out.write('You need to sendmail to %s@qq.com by gae.' %response[1:])
+
+    retval = gae_sendmail(response[1:])
+    if retval:
+        self.response.out.write('Congratulations!Mail have been sent successfully by gae.')
+    else:
+        self.response.out.write('Sorry!Mail have not sent by gae.')
+
+    logging.info('Mailbox %s@qq.com not found',response[1:])
+    self.response.out.write('Mailbox %s@qq.com not found' %response[1:])
+    """
 
 
     #response = urllib.urlopen('http://scola.hp.af.cm/').read()
