@@ -1,4 +1,5 @@
 ﻿cron:
 - description: periodic send mail
   url: /
-  schedule: every 2 minutes
+  schedule: every 1 minutes from 12:00 to 23:59
+  timezone: America/Los_Angeles
